@@ -10,6 +10,7 @@ public class Grab : MonoBehaviour {
     public OVRInput.Controller controller;
     public float grabRadius;
     public LayerMask grabMask;
+    public string grabButton;  // Must be named in InputManager (and should be on the indicated controller)
 
     private GameObject grabbedObject;
     private bool grabbing;
@@ -49,7 +50,7 @@ public class Grab : MonoBehaviour {
     }
 	
 	void Update () {
-        float b = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, controller);
+        float b = Input.GetAxis(grabButton);
 
         if (!grabbing && b == 1) GrabObject();
         
