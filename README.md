@@ -21,4 +21,4 @@ Under development.
 * Horalia Armas
 * David Dumas (<david@dumas.io>)
 * Brandon Reichman
-* Hai Tran
+* Hai Tran (<htran41@uic.edu>)
