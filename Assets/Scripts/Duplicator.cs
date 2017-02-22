@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Duplicator : MonoBehaviour
 {
+	// Number of clones on each side of the player (above, below, front, behind, left, right)
     public int N = 3;
+
+	// Size of each clone
     public float cubesize = 3.0f;
+
+	// Only duplicate objects which are assigned a specific tag
     public string targetTag = "Tiled";
 
+	// Count number of validated clones (no rigidbody, no attached script, etc.). Also used
+	// to assign name to each clone.
     private int clonecount = 0;
 
     void Start()
