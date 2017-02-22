@@ -6,7 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grab : MonoBehaviour {
+public class Grab : MonoBehaviour
+{
     public OVRInput.Controller controller;
     public float grabRadius;
     public LayerMask grabMask;
@@ -15,7 +16,7 @@ public class Grab : MonoBehaviour {
     private GameObject grabbedObject;
     private bool grabbing;
     private bool oldKinematic;
-    
+
     void GrabObject()
     {
         grabbing = true;
@@ -25,7 +26,7 @@ public class Grab : MonoBehaviour {
         if (hits.Length > 0)
         {
             int closestHit = 0;
-            for (int i=0; i < hits.Length; i++)
+            for (int i = 0; i < hits.Length; i++)
             {
                 if (hits[i].distance < hits[closestHit].distance) closestHit = i;
             }
@@ -48,12 +49,13 @@ public class Grab : MonoBehaviour {
             grabbedObject = null;
         }
     }
-	
-	void Update () {
+
+    void Update()
+    {
         float b = Input.GetAxis(grabButton);
 
         if (!grabbing && b == 1) GrabObject();
-        
+
         if (grabbing && b < 1) DropObject();
 
         if (grabbing && grabbedObject != null)
