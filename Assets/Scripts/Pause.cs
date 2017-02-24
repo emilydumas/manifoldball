@@ -6,9 +6,18 @@ public class Pause : MonoBehaviour {
 	[SerializeField] private GameObject pausePanel;
 	public OVRInput.Controller controller;
 
+	// To avoid calling GetComponent too many times in Update(),
+	// it is better to store the components in variables once.
+	// Reference: http://wiki.unity3d.com/index.php?title=General_Performance_Tips
+	private PositionResetter positionResetter;
+	private AddForce addForce;
+	private TouchController touchController;
+
 	// Use this for initialization
 	void Start () {
-		pausePanel = GameObject.Find ("Pause Panel");
+		positionResetter = GameObject.Find("Sphere").GetComponent<PositionResetter> ();
+		addForce = GameObject.Find ("Sphere").GetComponent<AddForce> ();
+		touchController = GameObject.Find ("LeftHand").GetComponent<TouchController> ();
 		pausePanel.SetActive (false);
 	}
 	
@@ -28,17 +37,10 @@ public class Pause : MonoBehaviour {
 	private void PauseGame() {
 		Time.timeScale = 0;
 
-		// Disable all other scripts
-		GameObject.Find("Sphere").GetComponent<PositionResetter> ().enabled = false;
-		GameObject.Find ("Sphere").GetComponent<Wrapper> ().enabled = false;
-		GameObject.Find ("Sphere").GetComponent<Highlighter> ().enabled = false;
-		GameObject.Find ("Sphere").GetComponent<AddForce> ().enabled = false;
-		GameObject.Find ("Runner").GetComponent<Duplicator> ().enabled = false;
-		GameObject.Find ("Runner").GetComponent<SharedParameters> ().enabled = false;
-		GameObject.Find ("Runner").GetComponent<SharedParameters> ().enabled = false;
-		GameObject.Find ("LeftHand").GetComponent<TouchController> ().enabled = false;
-		GameObject.Find ("LeftHand").GetComponent<Grab> ().enabled = false;
-		GameObject.Find ("RightHand").GetComponent<TouchController> ().enabled = false;
+		// Disable scripts related to movements
+		positionResetter.enabled = false;
+		addForce.enabled = false;
+		touchController.enabled = false;
 
 		// Display pause menu
 		pausePanel.SetActive (true);
@@ -47,17 +49,10 @@ public class Pause : MonoBehaviour {
 	private void ResumeGame() {
 		Time.timeScale = 1;
 
-		// Re-enable all other scripts
-		GameObject.Find("Sphere").GetComponent<PositionResetter> ().enabled = true;
-		GameObject.Find ("Sphere").GetComponent<Wrapper> ().enabled = true;
-		GameObject.Find ("Sphere").GetComponent<Highlighter> ().enabled = true;
-		GameObject.Find ("Sphere").GetComponent<AddForce> ().enabled = true;
-		GameObject.Find ("Runner").GetComponent<Duplicator> ().enabled = true;
-		GameObject.Find ("Runner").GetComponent<SharedParameters> ().enabled = true;
-		GameObject.Find ("Runner").GetComponent<SharedParameters> ().enabled = true;
-		GameObject.Find ("LeftHand").GetComponent<TouchController> ().enabled = true;
-		GameObject.Find ("LeftHand").GetComponent<Grab> ().enabled = true;
-		GameObject.Find ("RightHand").GetComponent<TouchController> ().enabled = true;
+		// Re-enable scripts
+		positionResetter.enabled = true;
+		addForce.enabled = true;
+		touchController.enabled = true;
 
 		// Hide pause menu
 		pausePanel.SetActive (false);

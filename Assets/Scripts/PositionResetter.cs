@@ -7,10 +7,14 @@ public class PositionResetter : MonoBehaviour {
     private Vector3 initpos;
     private Quaternion initrot;
 
+	Rigidbody rb;
+
 	// Use this for initialization
 	void Start () {
         initpos = transform.position;
         initrot = transform.rotation;
+
+		rb = gameObject.GetComponent<Rigidbody>();    // Reduce number of GetComponent() calls in Update().
 	}
 	
 	// Update is called once per frame
@@ -18,7 +22,7 @@ public class PositionResetter : MonoBehaviour {
 		if (OVRInput.Get(OVRInput.RawButton.RThumbstick)) {
             transform.position = initpos;
             transform.rotation = initrot;
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            
             if (rb != null)
             {
                 rb.velocity = new Vector3(0f, 0f, 0f);

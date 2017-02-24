@@ -8,7 +8,7 @@ public class Duplicator : MonoBehaviour
     public int N = 3;
 
 	// Size of each clone
-    public float cubesize = 3.0f;
+    private float cubesize;
 
 	// Only duplicate objects which are assigned a specific tag
     public string targetTag = "Tiled";
@@ -19,6 +19,8 @@ public class Duplicator : MonoBehaviour
 
     void Start()
     {
+		cubesize = GameObject.Find("Runner").GetComponent<SharedParameters>().cubeSize;
+
         foreach (GameObject target in GameObject.FindGameObjectsWithTag(targetTag))
         {
             GameObject clonegroup = new GameObject(target.name + "-clones");
