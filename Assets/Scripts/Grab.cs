@@ -31,8 +31,9 @@ public class Grab : MonoBehaviour
                 if (hits[i].distance < hits[closestHit].distance) closestHit = i;
             }
             grabbedObject = hits[closestHit].transform.gameObject;
-            oldKinematic = grabbedObject.GetComponent<Rigidbody>().isKinematic;
-            grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
+			Rigidbody grabbedRigidBody = grabbedObject.GetComponent<Rigidbody> ();    // reduce number of GetComponent() calls
+			oldKinematic = grabbedRigidBody.isKinematic;
+			grabbedRigidBody.isKinematic = true;
         }
     }
 
@@ -42,10 +43,11 @@ public class Grab : MonoBehaviour
 
         if (grabbedObject != null)
         {
-            grabbedObject.GetComponent<Rigidbody>().isKinematic = false; //oldKinematic;
-            grabbedObject.GetComponent<Rigidbody>().velocity = OVRInput.GetLocalControllerVelocity(controller);
+			Rigidbody grabbedRigidBody = grabbedObject.GetComponent<Rigidbody> ();    // reduce number of GetComponent() calls
+			grabbedRigidBody.isKinematic = false; //oldKinematic;
+			grabbedRigidBody.velocity = OVRInput.GetLocalControllerVelocity(controller);
             Vector3 omega = OVRInput.GetLocalControllerAngularVelocity(controller).eulerAngles * Mathf.Deg2Rad;
-            grabbedObject.GetComponent<Rigidbody>().angularVelocity = omega;
+			grabbedRigidBody.angularVelocity = omega;
             grabbedObject = null;
         }
     }
