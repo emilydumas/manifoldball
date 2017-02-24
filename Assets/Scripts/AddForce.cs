@@ -8,6 +8,6 @@ public class AddForce : MonoBehaviour {
 
     private void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.name == "RightHand") GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerVelocity(RightController) * 1, ForceMode.VelocityChange);
+        if (col.gameObject.name == "Racket") GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerVelocity(RightController) * 1, ForceMode.VelocityChange);
     }
 }
