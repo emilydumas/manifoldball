@@ -15,7 +15,7 @@ public class PositionResetter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (OVRInput.Get(OVRInput.Button.One, controller)) {
+		if (OVRInput.Get(OVRInput.RawButton.RThumbstick)) {
             transform.position = initpos;
             transform.rotation = initrot;
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
