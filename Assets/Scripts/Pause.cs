@@ -9,15 +9,14 @@ public class Pause : MonoBehaviour {
 	// To avoid calling GetComponent too many times in Update(),
 	// it is better to store the components in variables once.
 	// Reference: http://wiki.unity3d.com/index.php?title=General_Performance_Tips
+
 	private PositionResetter positionResetter;
 	private ManualBouncePhysics ManualBouncePhysics;
-	private TouchController touchController;
 
 	// Use this for initialization
 	void Start () {
 		positionResetter = GameObject.Find("Sphere").GetComponent<PositionResetter> ();
 		ManualBouncePhysics = GameObject.Find ("Sphere").GetComponent<ManualBouncePhysics> ();
-		touchController = GameObject.Find ("LeftHand").GetComponent<TouchController> ();
 		pausePanel.SetActive (false);
 	}
 	
@@ -40,7 +39,6 @@ public class Pause : MonoBehaviour {
 		// Disable scripts related to movements
 		positionResetter.enabled = false;
 		ManualBouncePhysics.enabled = false;
-		touchController.enabled = false;
 
 		// Display pause menu
 		pausePanel.SetActive (true);
@@ -52,7 +50,6 @@ public class Pause : MonoBehaviour {
 		// Re-enable scripts
 		positionResetter.enabled = true;
 		ManualBouncePhysics.enabled = true;
-		touchController.enabled = true;
 
 		// Hide pause menu
 		pausePanel.SetActive (false);
