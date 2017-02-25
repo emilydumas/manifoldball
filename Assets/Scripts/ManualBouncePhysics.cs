@@ -10,8 +10,8 @@ public class ManualBouncePhysics : MonoBehaviour {
     /// </summary>
 
     public float forceMultiplier = 1.0f;
-    public OVRInput.Controller racquetController;
-    public GameObject racquetGameObject;
+    public OVRInput.Controller racketController;
+    public GameObject racketGameObject;
 	private Rigidbody rigidBody;
     
 	void Start() {
@@ -22,9 +22,9 @@ public class ManualBouncePhysics : MonoBehaviour {
 
     private void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject == racquetGameObject)
+        if (col.gameObject == racketGameObject)
         {
-            rigidBody.AddForce(OVRInput.GetLocalControllerVelocity(racquetController) * forceMultiplier, ForceMode.VelocityChange);
+            rigidBody.AddForce(OVRInput.GetLocalControllerVelocity(racketController) * forceMultiplier, ForceMode.VelocityChange);
         }
     }
 }
