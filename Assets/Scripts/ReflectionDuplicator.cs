@@ -3,21 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReflectionDuplicator : MonoBehaviour
+public class ReflectionDuplicator : Duplicator
 {
-	// Number of clones on each side of the player (above, below, front, behind, left, right)
-	public int N = 3;
-
-	// Size of each clone
-	private float cubesize;
-
-	// Only duplicate objects which are assigned a specific tag
-	public string targetTag = "Tiled";
-
-	// Count number of validated clones (no rigidbody, no attached script, etc.). Also used
-	// to assign name to each clone.
-	private int clonecount = 0;
-
 	void Start()
 	{
 		cubesize = GameObject.Find("Runner").GetComponent<SharedParameters>().cubeSize;
@@ -56,45 +43,5 @@ public class ReflectionDuplicator : MonoBehaviour
 					}
 		}
 
-	}
-
-
-	private GameObject TransformedClone(GameObject target, Vector3 translation, Vector3 scale, Quaternion rotation)
-	{
-		// Make a full hierarchical clone of the input object and all components
-		GameObject clone = Instantiate(target);
-		clone.name = target.name + "-clone" + clonecount;
-
-		// Disable all scripts on the clone
-		// based on http://answers.unity3d.com/questions/292802
-		MonoBehaviour[] scripts = clone.GetComponents<MonoBehaviour>();
-		foreach (MonoBehaviour script in scripts)
-		{
-			Destroy(script);
-		}
-
-		// Copies are not rigid bodies, either
-		Rigidbody[] rigidBodies = clone.GetComponents<Rigidbody>();
-		foreach (Rigidbody rb in rigidBodies)
-		{
-			Destroy(rb);
-		}
-
-		// Remove the colliders, too
-		BoxCollider[] boxColliders = clone.GetComponents<BoxCollider>();
-		foreach (BoxCollider bc in boxColliders)
-		{
-			Destroy(bc);
-		}
-
-		// Attach the TransformFollow script
-		TransformFollower tf = clone.AddComponent<TransformFollower>() as TransformFollower;
-		tf.translation = translation;
-		tf.scale = scale;
-		tf.rotation = rotation;
-		tf.leader = target;
-
-		clonecount++;
-		return clone;
 	}
 }

@@ -8,14 +8,14 @@ public class Duplicator : MonoBehaviour
     public int N = 3;
 
 	// Size of each clone
-    private float cubesize;
+	protected float cubesize;
 
 	// Only duplicate objects which are assigned a specific tag
     public string targetTag = "Tiled";
 
 	// Count number of validated clones (no rigidbody, no attached script, etc.). Also used
 	// to assign name to each clone.
-    private int clonecount = 0;
+	protected int clonecount = 0;
 
     void Start()
     {
@@ -49,7 +49,7 @@ public class Duplicator : MonoBehaviour
     }
 
 
-    private GameObject TransformedClone(GameObject target, Vector3 translation, Vector3 scale, Quaternion rotation)
+	protected GameObject TransformedClone(GameObject target, Vector3 translation, Vector3 scale, Quaternion rotation)
     {
         // Make a full hierarchical clone of the input object and all components
         GameObject clone = Instantiate(target);
