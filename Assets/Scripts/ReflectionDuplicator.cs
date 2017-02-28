@@ -62,7 +62,8 @@ public class ReflectionDuplicator : Duplicator
 		Rigidbody[] rigidBodies = clone.GetComponents<Rigidbody>();
 		foreach (Rigidbody rb in rigidBodies)
 		{
-			Destroy(rb);
+			//if (target.name != "Sphere")
+				Destroy(rb);
 		}
 
 		// Remove the colliders, too

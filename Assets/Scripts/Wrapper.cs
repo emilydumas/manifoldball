@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Wrapper : MonoBehaviour {
-	private float cellsize = 3.0f;    // WARNING: for some reason, removing the value 3.0f in this line will cause an error.
+	protected float cellsize = 3.0f;    // WARNING: for some reason, removing the value 3.0f in this line will cause an error.
     private Vector3 initial_diff;
 
 	// Use this for initialization
