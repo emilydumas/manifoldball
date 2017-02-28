@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SharedParameters : MonoBehaviour {
 	// Unit: meter(s)
-	public float roomSize = 3;
+	public float cubeSize = 3;
 
 	// Any parameter that need to be used by multiple scripts should go here
 
