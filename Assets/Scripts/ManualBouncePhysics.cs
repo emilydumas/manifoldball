@@ -24,7 +24,8 @@ public class ManualBouncePhysics : MonoBehaviour {
 		rigidBody = GetComponent<Rigidbody> ();  
         if (col.gameObject == racketGameObject)
         {
-            rigidBody.AddForce(OVRInput.GetLocalControllerVelocity(racketController) * forceMultiplier, ForceMode.VelocityChange);
+			if (rigidBody != null)
+            	rigidBody.AddForce(OVRInput.GetLocalControllerVelocity(racketController) * forceMultiplier, ForceMode.VelocityChange);
         }
     }
 }
