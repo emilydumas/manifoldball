@@ -37,50 +37,30 @@ public class ReflectionDuplicator : Duplicator
 								(float) Math.Pow(-1, j % 2),
 								(float) Math.Pow(-1, k % 2)
 							),
-							new Quaternion()
+							/*
+							new Quaternion(
+								target.transform.localRotation.x * (float) Math.Pow(-1, i % 2),
+								target.transform.localRotation.y * (float) Math.Pow(-1, j % 2),
+								target.transform.localRotation.z * (float) Math.Pow(-1, k % 2),
+								target.transform.localRotation.w * (float) Math.Pow(-1, i % 2) * (float) Math.Pow(-1, j % 2) * (float) Math.Pow(-1, k % 2)
+							)
+
+							new Quaternion(
+								target.transform.localRotation.x*-1.0f,
+								target.transform.localRotation.y,
+								target.transform.localRotation.z,
+								target.transform.localRotation.w * -1.0f)
+								*/
+							//Quaternion.Euler(-target.transform.rotation.eulerAngles)
+							//Quaternion.Inverse(target.transform.rotation)
+							target.transform.rotation
 						);
 						clone.transform.parent = clonegroup.transform;
 					}
 		}
-	}
 
-	protected GameObject TransformedClone(GameObject target, Vector3 translation, Vector3 scale, Quaternion rotation)
-	{
-		// Make a full hierarchical clone of the input object and all components
-		GameObject clone = Instantiate(target);
-		clone.name = target.name + "-clone" + clonecount;
+		//UnityEngine.VR.InputTracking.Recenter ();
 
-		// Disable all scripts on the clone
-		// based on http://answers.unity3d.com/questions/292802
-		MonoBehaviour[] scripts = clone.GetComponents<MonoBehaviour>();
-		foreach (MonoBehaviour script in scripts)
-		{
-			Destroy(script);
-		}
-
-		// Copies are not rigid bodies, either
-		Rigidbody[] rigidBodies = clone.GetComponents<Rigidbody>();
-		foreach (Rigidbody rb in rigidBodies)
-		{
-			//if (target.name != "Sphere")
-				Destroy(rb);
-		}
-
-		// Remove the colliders, too
-		BoxCollider[] boxColliders = clone.GetComponents<BoxCollider>();
-		foreach (BoxCollider bc in boxColliders)
-		{
-			Destroy(bc);
-		}
-
-		// Attach the TransformFollow script
-		TransformFollower tf = clone.AddComponent<TransformFollower>() as TransformFollower;
-		tf.translation = translation;
-		tf.scale = scale;
-		tf.rotation = rotation;
-		tf.leader = target;
-
-		clonecount++;
-		return clone;
+		//GameObject.Find ("Player").transform.position.Set (0f, -0.6f, 0f);
 	}
 }
