@@ -14,14 +14,14 @@ public class ManualBouncePhysics : MonoBehaviour {
     public GameObject racketGameObject;
 	private Rigidbody rigidBody;
     
-	void Start() {
-		// Store the rigid body so GetComponent does not have to be called 
-		// everytime a collision happens
-		rigidBody = GetComponent<Rigidbody> ();    
+	void Awake() {
+		// Store the rigid body so GetComponent does not have to be called everytime a collision happens
+		//rigidBody = GetComponent<Rigidbody> ();    
 	}
 
     private void OnCollisionEnter(Collision col)
     {
+		rigidBody = GetComponent<Rigidbody> ();  
         if (col.gameObject == racketGameObject)
         {
 			if (rigidBody != null)
