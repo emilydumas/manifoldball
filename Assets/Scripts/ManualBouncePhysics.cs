@@ -9,7 +9,7 @@ public class ManualBouncePhysics : MonoBehaviour {
     ///   built-in rigid body collision engine.
     /// </summary>
 
-    public float forceMultiplier = 1.0f;
+    public float forceMultiplier;
     public OVRInput.Controller racketController;
     public GameObject racketGameObject;
 	private Rigidbody rigidBody;
