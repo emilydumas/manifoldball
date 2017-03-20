@@ -22,10 +22,13 @@ Oculus runtime.
 
 Download the ZIP archive containing the Manifold Ball technical
 preview application.  Extract the ZIP file, and then run the
-appropriate executable:
+EXE file.
 
-32-bit windows users, run "manifoldball-pre-alpha-0317-32bit.exe"
-64-bit windows users, run "manifoldball-pre-alpha-0317-64bit.exe"
+For 32-bit windows users, the executable will be called:
+  manifoldball-pre-alpha-0317-32bit.exe
+
+For 64-bit windows users, the executable will be called:
+  manifoldball-pre-alpha-0317-64bit.exe
 
 Put on the Oculus headset, dismiss the Health & Safety Warning if
 necessary, and you will be presented with the main menu.
