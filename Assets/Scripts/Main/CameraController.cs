@@ -13,11 +13,14 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Apply to each object in the queue
+		Matrix4x4 m = Camera.main.transform.worldToLocalMatrix;
+
 		foreach (Renderer r in queue) {
-			r.sharedMaterial.SetMatrix("_invcamerapose",Camera.main.transform.worldToLocalMatrix);
-			if (Input.GetKey (KeyCode.Backspace))
-				UnityEditor.EditorApplication.isPlaying = false;
+			r.sharedMaterial.SetMatrix("_invcamerapose",m);
 		}
+
+//		if (Input.GetKey (KeyCode.Backspace))
+//			UnityEditor.EditorApplication.isPlaying = false;
     }
 
 	// Called once before each rendering pass, so up to three times per frame in VR
