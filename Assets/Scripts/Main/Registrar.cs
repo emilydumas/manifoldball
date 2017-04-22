@@ -13,8 +13,9 @@ public class Registrar : MonoBehaviour {
 
 	// TODO: Separate clone logic and variables into another script/class
 	public int N = 2;
-	private float cubesize; // Fetched from wrapper
+	public float cubesize = 3.0f;
 	private int clonecount = 0;
+	public Tiling tiling;
 
 	void Awake()
 	{
@@ -54,6 +55,9 @@ public class Registrar : MonoBehaviour {
 				Debug.Log ("Failed to update bounds on \"" + target.name + "\", no MeshFilter component found.");
 			}
 		}
+
+		// Create the tiling (so it can be accessed in other classes Start())
+		tiling = new Tiling (N, cubesize);
 	}
 
 
@@ -86,35 +90,25 @@ public class Registrar : MonoBehaviour {
 		}
 
 		// STEP 3: CREATE CLONES
-		cubesize = this.GetComponent<Wrapper> ().cubesize;
-
-		//physicsUtil = this.GetComponent<PhysicsUtil> ();
-
 		foreach (GameObject target in GameObject.FindGameObjectsWithTag(targetTag))
 		{
 			ResetCloneCount ();
 			GameObject clonegroup = new GameObject(target.name + "-clones");
 	
-			for (int i = -N; i <= N; i++)
-				for (int j = -N; j <= N; j++)
-					for (int k = -N; k <= N; k++) {
-						if (i == 0 && j == 0 && k == 0)
-							continue;
-						GameObject clone = TransformedClone (
-							                   target,
-							                   new Vector3 (cubesize * i, cubesize * j, cubesize * k)
-						                   );
-						clone.transform.parent = clonegroup.transform;
-					}
+			foreach (Matrix4x4 T in tiling) {
+				if (T.Equals (Matrix4x4.identity))
+					continue;
+				GameObject clone = TransformedClone (target, T);
+				clone.transform.parent = clonegroup.transform;
+			}
 		}
 	}
 		
 	private void ResetCloneCount() {
 		clonecount = 0;
 	}
-
-	// TODO: Matrix4x4 transform parameter instead of translation vector
-	private GameObject TransformedClone(GameObject target, Vector3 translation)
+		
+	private GameObject TransformedClone(GameObject target, Matrix4x4 FP)
 	{
 		// Make a full hierarchical clone of the input object...
 		GameObject clone = Instantiate(target);
@@ -124,7 +118,7 @@ public class Registrar : MonoBehaviour {
 		RemoveComponents(clone);
 
 		// Set FollowerPose of the clone as a per-rendered property
-		mop.SetFollowerPose(clone, Matrix4x4.TRS(translation,Quaternion.identity, new Vector3(1,1,1)));
+		mop.SetFollowerPose(clone, FP);
 
 		// Disable culling
 		Mesh mesh = clone.GetComponent<MeshFilter>().mesh;
