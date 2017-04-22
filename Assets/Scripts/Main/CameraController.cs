@@ -6,10 +6,6 @@ public class CameraController : MonoBehaviour {
 	// Materials needing to receive camera pose updates
 	private List<Renderer> queue = new List<Renderer> ();
 
-	// Use this for initialization
-	void Start () {
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		// Apply to each object in the queue

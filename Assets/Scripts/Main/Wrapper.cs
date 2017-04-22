@@ -10,13 +10,14 @@ public class Wrapper : MonoBehaviour {
 	public float cubesize = 3.0f;
     private Vector4 initial_diff;
 	private Renderer ballRend;
-	private PhysicsUtil physicsUtil;
+	private InitialPoses IP;
 
 	// Use this for initialization
 	void Start () {
 		ballRend = ball.gameObject.GetComponent<Renderer> ();
-		physicsUtil = this.GetComponent<PhysicsUtil> ();
-		Vector3 ballInitPos = physicsUtil.ballInitialPosition;
+		IP = this.GetComponent<InitialPoses> ();
+
+		Vector3 ballInitPos = IP.ballInitialPosition;
 		Vector4 ballInititalPosition = new Vector4(ballInitPos.x, ballInitPos.y, ballInitPos.z, 1f);
 		initial_diff = ballInititalPosition - wrap(ballInititalPosition);
     }
@@ -31,20 +32,19 @@ public class Wrapper : MonoBehaviour {
         return mymod(p + 0.5f * q, q) - 0.5f * q;
     }
 	
-    Vector4 wrap(Vector4 v)
+    Vector4 wrap(Vector3 v)
     {
-        return new Vector4 (
+        return new Vector3 (
 			scalar_wrap(v.x, cubesize),
 			scalar_wrap(v.y, cubesize),
-			scalar_wrap(v.z, cubesize),
-			1
+			scalar_wrap(v.z, cubesize)
         );
     }
 
 	// Update is called once per frame
 	void Update () {
-		Vector4 col3 = ballRend.sharedMaterial.GetMatrix ("_objectpose").GetColumn (3);
+		Vector3 col3 = mop.GetObjectPosition (ballRend);
 		col3 = wrap (col3) + initial_diff;
-		physicsUtil.PositionSet(ballRend, col3);
+		mop.SetObjectPosition(ballRend, col3);
 	}
 }

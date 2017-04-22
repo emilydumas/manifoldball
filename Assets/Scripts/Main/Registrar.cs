@@ -20,7 +20,7 @@ public class Registrar : MonoBehaviour {
 	{
 		// STEP 1: SHADER INITIALIZATION
 		// Every instance of VRMOP needs projection and eye shift matrices.
-
+	
 		// Retrieve the current projection
 		Matrix4x4 currentP = GL.GetGPUProjectionMatrix(Camera.main.projectionMatrix, true);
 		// Create a standard view matrix
@@ -38,6 +38,7 @@ public class Registrar : MonoBehaviour {
 			// First we duplicate so changed properties will not be saved.
 			rend.sharedMaterial = new Material (rend.sharedMaterial);
 
+			// TODO: Move these into MOPUtil?
 			// Now we initialize their locks and PV matrices
 			rend.sharedMaterial.SetMatrix("_VP0", VP0);
 			rend.sharedMaterial.SetInt ("_locked", 1);
@@ -123,15 +124,7 @@ public class Registrar : MonoBehaviour {
 		RemoveComponents(clone);
 
 		// Set FollowerPose of the clone as a per-rendered property
-		MaterialPropertyBlock propblock = new MaterialPropertyBlock();
-		Renderer ren = clone.GetComponent<Renderer>();
-
-		ren.GetPropertyBlock(propblock);
-		propblock.SetVector("_followerpose1", new Vector4(1, 0, 0, translation.x));
-		propblock.SetVector("_followerpose2", new Vector4(0, 1, 0, translation.y));
-		propblock.SetVector("_followerpose3", new Vector4(0, 0, 1, translation.z));
-		propblock.SetVector("_followerpose4", new Vector4(0,0,0, 1)); 
-		ren.SetPropertyBlock (propblock);
+		mop.SetFollowerPose(clone, Matrix4x4.TRS(translation,Quaternion.identity, new Vector3(1,1,1)));
 
 		// Disable culling
 		Mesh mesh = clone.GetComponent<MeshFilter>().mesh;
