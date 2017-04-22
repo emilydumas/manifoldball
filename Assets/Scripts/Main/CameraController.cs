@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour {
 		Matrix4x4 m = Camera.main.transform.worldToLocalMatrix;
 
 		foreach (Renderer r in queue) {
-			r.sharedMaterial.SetMatrix("_invcamerapose",m);
+			mop.SetCameraPose (r, m);
 		}
 
 //		if (Input.GetKey (KeyCode.Backspace))

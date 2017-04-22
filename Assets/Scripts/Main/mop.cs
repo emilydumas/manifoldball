@@ -113,7 +113,7 @@ public static class mop {
 
 	public static Matrix4x4 GetCameraPose(Renderer ren)
 	{
-		return ren.sharedMaterial.GetMatrix ("_camerapose");
+		return ren.sharedMaterial.GetMatrix ("_invcamerapose");
 	}
 
 	public static Matrix4x4 GetCameraPose(GameObject obj)
@@ -124,7 +124,7 @@ public static class mop {
 
 	public static void SetCameraPose(Renderer ren, Matrix4x4 P)
 	{
-		ren.sharedMaterial.SetMatrix ("_camerapose",P);
+		ren.sharedMaterial.SetMatrix ("_invcamerapose",P);
 	}
 
 	public static void SetCameraPose(GameObject obj, Matrix4x4 P)
