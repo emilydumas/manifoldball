@@ -7,11 +7,13 @@ using UnityEngine;
 using System;
 
 public class Registrar : MonoBehaviour {
+	public enum TilingType { Torus, Boro };
+
 	public string targetTag = "Geometric";
 	public float IPD = 0.06f;
 	public CameraController cameraController;
 
-	// TODO: Separate clone logic and variables into another script/class
+	public TilingType tilingType;
 	public int N = 2;
 	public float cubesize = 3.0f;
 	private int clonecount = 0;
@@ -57,7 +59,11 @@ public class Registrar : MonoBehaviour {
 		}
 
 		// Create the tiling (so it can be accessed in other classes Start())
-		tiling = new Tiling (N, cubesize);
+		if (tilingType == TilingType.Torus) {
+			tiling = new TorusTiling (Matrix4x4.identity, N, cubesize);
+		} else {
+			tiling = new BoroTiling (Matrix4x4.identity, N, cubesize);
+		}
 	}
 
 
