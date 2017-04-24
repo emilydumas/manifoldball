@@ -8,16 +8,19 @@ using System;
 
 public class Registrar : MonoBehaviour {
 	public enum TilingType { Torus, Boro };
+	public enum CameraMode { Unity, MOP };
 
 	public string targetTag = "Geometric";
 	public float IPD = 0.06f;
 	public CameraController cameraController;
+	public CameraMode cameraMode;
 
 	public TilingType tilingType;
 	public int N = 2;
 	public float cubesize = 3.0f;
-	private int clonecount = 0;
 	public Tiling tiling;
+
+	private int clonecount = 0;
 
 	void Awake()
 	{
@@ -41,13 +44,15 @@ public class Registrar : MonoBehaviour {
 			// First we duplicate so changed properties will not be saved.
 			rend.sharedMaterial = new Material (rend.sharedMaterial);
 
-			// TODO: Move these into MOPUtil?
-			// Now we initialize their locks and PV matrices
-			rend.sharedMaterial.SetMatrix("_VP0", VP0);
-			rend.sharedMaterial.SetInt ("_locked", 1);
+			if (cameraMode == CameraMode.MOP) {
+				// TODO: Move these into MOPUtil?
+				// Now we initialize their locks and PV matrices
+				rend.sharedMaterial.SetMatrix("_VP0", VP0);
+				rend.sharedMaterial.SetInt ("_locked", 1);
 
-			rend.sharedMaterial.SetMatrix ("_eye0shift", eye0shift);
-			rend.sharedMaterial.SetMatrix ("_eye1shift", eye1shift);
+				rend.sharedMaterial.SetMatrix ("_eye0shift", eye0shift);
+				rend.sharedMaterial.SetMatrix ("_eye1shift", eye1shift);
+			}
 
 			// Disable culling
 			Mesh mesh = target.GetComponent<MeshFilter>().mesh;
@@ -77,7 +82,7 @@ public class Registrar : MonoBehaviour {
 		// Note that this is done before duplication, so a single queue entry updates the camera
 		// pose for all of the linked clones.
 
-		if (cameraController != null) {
+		if (cameraController != null && cameraMode == CameraMode.MOP) {
 			foreach (GameObject target in GameObject.FindGameObjectsWithTag(targetTag)) {
 				Renderer rend = target.GetComponent<Renderer> ();
 
