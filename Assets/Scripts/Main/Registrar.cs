@@ -63,11 +63,18 @@ public class Registrar : MonoBehaviour {
 			}
 		}
 
+		Matrix4x4 origin = Matrix4x4.identity;
+		InitialPoses IP = this.GetComponent<InitialPoses> ();
+		if (IP != null) {
+			Vector3 ibp = IP.globalRelativeShift + IP.ballInitialPosition;
+			origin.SetColumn (3, new Vector4(ibp.x, ibp.y, ibp.z, 1.0f));
+		}
+
 		// Create the tiling (so it can be accessed in other classes Start())
 		if (tilingType == TilingType.Torus) {
-			tiling = new TorusTiling (Matrix4x4.identity, N, cubesize);
+			tiling = new TorusTiling (origin, N, cubesize);
 		} else {
-			tiling = new BoroTiling (Matrix4x4.identity, N, cubesize);
+			tiling = new BoroTiling (origin, N, cubesize);
 		}
 	}
 
