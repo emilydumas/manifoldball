@@ -7,7 +7,7 @@ using UnityEngine;
 using System;
 
 public class Registrar : MonoBehaviour {
-	public enum TilingType { Torus, Boro };
+	public enum TilingType { Torus, Boro, MirrorCube };
 	public enum CameraMode { Unity, MOP };
 
 	public string targetTag = "Geometric";
@@ -73,8 +73,10 @@ public class Registrar : MonoBehaviour {
 		// Create the tiling (so it can be accessed in other classes Start())
 		if (tilingType == TilingType.Torus) {
 			tiling = new TorusTiling (origin, N, cubesize);
-		} else {
+		} else if (tilingType == TilingType.Boro) {
 			tiling = new BoroTiling (origin, N, cubesize);
+		} else if (tilingType == TilingType.MirrorCube) {
+			tiling = new MirrorCubeTiling (origin, N, cubesize);
 		}
 	}
 
