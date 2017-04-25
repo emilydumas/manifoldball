@@ -40,6 +40,8 @@ public class PhysicsUtil : MonoBehaviour {
 			// Update ball's velocity
 			ballVelocity = (1 - ballBounciness) * ballVelocity + ballBounciness * paddleVelocity;
 		} 
+		if (Input.GetKeyDown (KeyCode.Space)||Input.GetAxis("Reset")==1)
+			ballVelocity = new Vector3 (0, 0, 0);
 
 		// Move ball
 		mop.TranslateObjectPosition(ballRenderer, ballVelocity * Time.deltaTime);
