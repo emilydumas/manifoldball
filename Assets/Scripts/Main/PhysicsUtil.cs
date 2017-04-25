@@ -42,6 +42,10 @@ public class PhysicsUtil : MonoBehaviour {
 		} 
 		if (Input.GetKeyDown (KeyCode.Space)||Input.GetAxis("Reset")==1)
 			ballVelocity = new Vector3 (0, 0, 0);
+		if (Input.GetAxis ("Break") == 1)
+			friction = 0.1f;
+		else
+			friction = 0.001f;
 
 		// Move ball
 		mop.TranslateObjectPosition(ballRenderer, ballVelocity * Time.deltaTime);
