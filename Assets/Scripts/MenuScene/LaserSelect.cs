@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class LaserSelect : MonoBehaviour
 {
-    public OVRInput.Controller controller;
     public LayerMask selectableLayers;
     private GameObject pointerDest;
     private bool clicked = false;
@@ -45,7 +44,7 @@ public class LaserSelect : MonoBehaviour
                 activateObject(pointerDest);
             }
 
-            if (!clicked && OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller))
+			if (!clicked && Input.GetAxis("Break")==1)
             {
                 clicked = true;
                 clickObject(pointerDest);
@@ -55,6 +54,6 @@ public class LaserSelect : MonoBehaviour
             pointerDest = null;
             clicked = false;
         }
-        clicked = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller);
+		clicked = (Input.GetAxis("Break") == 1);
     }
 }
