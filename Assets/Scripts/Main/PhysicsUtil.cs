@@ -16,6 +16,8 @@ public class PhysicsUtil : MonoBehaviour {
 	private Vector4 ballCurrentPosition;
 	private Vector4 paddleCurrentPosition;
 	private Vector4 paddleLastPosition;
+	private bool grabbed;
+	private Grabbing grabbing;
 
 	public void Start() {
 		ballRenderer = ball.gameObject.GetComponent<Renderer> ();
@@ -29,6 +31,8 @@ public class PhysicsUtil : MonoBehaviour {
 		ballCurrentPosition = mop.GetObjectPosition(ballRenderer);
 		paddleCurrentPosition = mop.GetObjectPosition(paddleRenderer);
 
+		grabbed = Grabbing.grabbed;
+
 		// Since the changes in position of the ball and paddle are very tiny, we need to amplify them to make collisions realistic
 		// TODO: Make this time-based instead of a fixed constant!
 		float coeff = 50f;
@@ -40,10 +44,10 @@ public class PhysicsUtil : MonoBehaviour {
 			// Update ball's velocity
 			ballVelocity = (1 - ballBounciness) * ballVelocity + ballBounciness * paddleVelocity;
 		} 
-		if (Input.GetKeyDown (KeyCode.Space)||Input.GetAxis("Reset")==1)
+		if (OVRInput.Get(OVRInput.RawButton.LThumbstick)||OVRInput.Get(OVRInput.RawButton.RThumbstick)||grabbed==true)
 			ballVelocity = new Vector3 (0, 0, 0);
-		if (Input.GetAxis ("Break") == 1)
-			friction = 0.1f;
+		if (OVRInput.Get(OVRInput.RawButton.A))
+			friction = 0.05f;
 		else
 			friction = 0.001f;
 

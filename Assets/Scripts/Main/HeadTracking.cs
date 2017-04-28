@@ -5,10 +5,10 @@ using UnityEngine;
 public class HeadTracking : MonoBehaviour {
 	public GameObject OVRCamera;
 
-	private Vector3 headScal;
 	private Material rend;
 	private Vector3 CamPose;
 	private Quaternion CamRot;
+	private Vector3 headScal;
 
 	void Start()
 	{

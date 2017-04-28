@@ -30,7 +30,5 @@ public class HandTracking : MonoBehaviour {
 		Hpose=Matrix4x4.TRS(handPose,handRot,handScal);
 		hand.SetMatrix ("_objectpose", Hpose);
 
-		if (OVRInput.Get (OVRInput.RawButton.A))
-			Debug.Log ("yes");
 	}
 }
