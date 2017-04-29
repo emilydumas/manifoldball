@@ -46,10 +46,13 @@ public class PhysicsUtil : MonoBehaviour {
 		} 
 		if (OVRInput.Get(OVRInput.RawButton.LThumbstick)||OVRInput.Get(OVRInput.RawButton.RThumbstick)||grabbed==true)
 			ballVelocity = new Vector3 (0, 0, 0);
+
 		if (OVRInput.Get(OVRInput.RawButton.A))
 			friction = 0.05f;
 		else
 			friction = 0.001f;
+		if (OVRInput.Get (OVRInput.RawButton.B))
+			friction -= 0.025f;
 
 		// Move ball
 		mop.TranslateObjectPosition(ballRenderer, ballVelocity * Time.deltaTime);

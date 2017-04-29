@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandTracking : MonoBehaviour {
+public class LHandTracking : MonoBehaviour {
 
 	public OVRInput.Controller controller;
 	public GameObject Hand;
-	public bool right = true;
+	public bool left = true;
 
-	private bool left;
+	private bool right;
 	private Quaternion handRot;
 	private Vector3 handPose;
 	private Vector3 handScal;
@@ -22,25 +22,23 @@ public class HandTracking : MonoBehaviour {
 		handScal = new Vector3 (1, 1, 1);
 		hand = Hand.GetComponent<Renderer> ().sharedMaterial;
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
-		//working on switching hands
+		right = this.GetComponent<HandTracking> ().right;
 
-		left = this.GetComponent<LHandTracking> ().left;
+		if (OVRInput.GetDown (OVRInput.RawButton.Y))
+			left = false;
 
-		if (OVRInput.GetDown (OVRInput.RawButton.Y)) {
-			right = false;
-			this.GetComponent<LHandTracking> ().left = true;
+		if(left)
+			this.GetComponent<HandTracking> ().enabled = false;
+
+
+		if (left == false) {
+			this.GetComponent<HandTracking> ().right = true;
+			this.GetComponent<HandTracking> ().enabled = true;
 		}
-		
-		if (right)
-			this.GetComponent<LHandTracking> ().enabled = false;
-
-		if (right == false)
-			this.GetComponent<LHandTracking> ().enabled = true;
-	
 
 		handRot = OVRInput.GetLocalControllerRotation (controller);
 		handPose = OVRInput.GetLocalControllerPosition (controller);
