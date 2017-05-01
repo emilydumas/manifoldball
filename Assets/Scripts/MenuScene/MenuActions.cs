@@ -9,4 +9,19 @@ public class MenuActions : MonoBehaviour {
 		GlobalPreferences.tilingType = (TilingType)Enum.Parse (typeof(TilingType), tilingName);
         SceneManager.LoadScene("EuclideanGame");
     }
+
+	public void ActivateMenu ()
+	{
+		SceneManager.LoadScene("MenuScene");
+	}
+
+	public void ActivateAbout ()
+	{
+		SceneManager.LoadScene ("AboutScene");
+	}
+
+	public void LaunchMCLHome()
+	{
+		Application.OpenURL ("http://mcl.math.uic.edu/");
+	}
 }

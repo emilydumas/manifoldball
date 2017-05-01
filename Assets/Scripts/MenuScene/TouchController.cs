@@ -11,7 +11,6 @@ public class TouchController : MonoBehaviour {
         transform.localPosition = OVRInput.GetLocalControllerPosition(controller);
 		if (OVRInput.Get (OVRInput.RawButton.LThumbstick) && OVRInput.Get (OVRInput.RawButton.RThumbstick)) {
 			UnityEngine.Application.Quit ();
-			Debug.Log ("Would QuitGame");
 		}
     }
 }
