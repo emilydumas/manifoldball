@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class HandTracking : MonoBehaviour {
 
@@ -19,8 +18,5 @@ public class HandTracking : MonoBehaviour {
 		Vector3 handPos = OVRInput.GetLocalControllerPosition (controller);
 
 		mop.SetObjectPose (ren, Matrix4x4.TRS (handPos, handRot, new Vector3 (1, 1, 1)));
-
-		if (OVRInput.GetDown (OVRInput.RawButton.Start))
-			SceneManager.LoadScene ("MenuScene");
 	}
 }

@@ -9,8 +9,12 @@ public class TouchController : MonoBehaviour {
 	void Update () {
         transform.localRotation = OVRInput.GetLocalControllerRotation(controller);
         transform.localPosition = OVRInput.GetLocalControllerPosition(controller);
+
+		// Quit on both thumbstick press
 		if (OVRInput.Get (OVRInput.RawButton.LThumbstick) && OVRInput.Get (OVRInput.RawButton.RThumbstick)) {
 			UnityEngine.Application.Quit ();
+			Debug.LogError ("Quit selected.");
 		}
+
     }
 }
