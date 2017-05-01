@@ -7,7 +7,6 @@ using UnityEngine;
 using System;
 
 public class Registrar : MonoBehaviour {
-	public enum TilingType { Torus, Boro, MirrorCube };
 	public enum CameraMode { Unity, MOP };
 
 	public string targetTag = "Geometric";
@@ -15,10 +14,14 @@ public class Registrar : MonoBehaviour {
 	public CameraController cameraController;
 	public CameraMode cameraMode;
 
-	public TilingType tilingType;
 	public int N = 2;
 	public float cubesize = 3.0f;
-	public Tiling tiling;
+
+	[Header("Debugging: Ignore menu, set tiling")]
+	public bool ForceTilingType = false;
+	[Tooltip("Typically null, use only to override menu selection.")] public TilingType ForcedTilingValue;
+
+	public Tiling tiling;  // Not shown in inspector!
 
 	private int clonecount = 0;
 
@@ -70,12 +73,17 @@ public class Registrar : MonoBehaviour {
 			origin.SetColumn (3, new Vector4(ibp.x, ibp.y, ibp.z, 1.0f));
 		}
 
+		if (ForceTilingType) {
+			GlobalPreferences.tilingType = ForcedTilingValue;
+		}
+
 		// Create the tiling (so it can be accessed in other classes Start())
-		if (tilingType == TilingType.Torus) {
+		var tt = GlobalPreferences.tilingType;
+		if (tt == TilingType.Torus) {
 			tiling = new TorusTiling (origin, N, cubesize);
-		} else if (tilingType == TilingType.Boro) {
+		} else if (tt == TilingType.Boro) {
 			tiling = new BoroTiling (origin, N, cubesize);
-		} else if (tilingType == TilingType.MirrorCube) {
+		} else if (tt == TilingType.MirrorCube) {
 			tiling = new MirrorCubeTiling (origin, N, cubesize);
 		}
 	}
