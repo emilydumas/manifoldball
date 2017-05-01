@@ -7,7 +7,7 @@ using UnityEngine;
 public class Grabbing : MonoBehaviour {
 
 	public float grabDistance = 0.1f;
-	public static bool grabbed=false;
+	[HideInInspector] public bool grabbed=false;
 	public GameObject ball;
 	private OVRInput.Controller controller;
 
