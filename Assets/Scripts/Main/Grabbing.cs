@@ -12,7 +12,7 @@ public class Grabbing : MonoBehaviour {
 	private OVRInput.Controller controller;
 
 	private HandTracking ht;
-	private Vector3 gloveLastPosition,gloveCurrentPosition,gloveVelocity;
+	private Kinetics kball;
 	private Renderer rball;
 	private Renderer rglove;
 
@@ -26,36 +26,37 @@ public class Grabbing : MonoBehaviour {
 		}
 
 		rball = ball.GetComponent<Renderer> ();
+		kball = ball.GetComponent<Kinetics> ();
 		rglove = gameObject.GetComponent<Renderer> ();
-		gloveLastPosition = mop.GetObjectPosition (rglove);
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		gloveCurrentPosition = mop.GetObjectPosition(rglove);
-			
+		Vector3 gloveCurrentPosition = mop.GetObjectPosition(rglove);
+
 		float trigger;
 		if (ht.controller == OVRInput.Controller.LTouch) {
 			trigger = OVRInput.Get (OVRInput.RawAxis1D.LHandTrigger) + OVRInput.Get (OVRInput.RawAxis1D.LIndexTrigger);
 		} else {
 			trigger = OVRInput.Get (OVRInput.RawAxis1D.RHandTrigger) + OVRInput.Get (OVRInput.RawAxis1D.RIndexTrigger);
 		}
-			
+
 		if (!grabbed && (trigger > 0)) {
 			float distance = Vector3.Distance (mop.GetObjectPosition (rball), gloveCurrentPosition);
 			if (distance < grabDistance) {
 				grabbed = true;
+				kball.kineticsActive = false;
 			}
 		}
 
 		if (grabbed && (trigger == 0)) {
 			grabbed = false;
+			kball.kineticsActive = true;
 		}
 
 		if (grabbed) {
 			mop.SetObjectPosition (rball, gloveCurrentPosition);
-			gloveVelocity = gloveCurrentPosition - gloveLastPosition;
 		}
 	}
 }
