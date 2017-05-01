@@ -6,10 +6,14 @@ public class ResetPosition : MonoBehaviour {
 	private Renderer ren;
 	private Kinetics kin;
 	private Vector3? firstposition;
+	private Grabbing grabbing;
+
+	public GameObject glove;
 
 	public void Start() {
 		ren = gameObject.GetComponent<Renderer> ();
 		kin = gameObject.GetComponent<Kinetics> ();
+		grabbing = glove.GetComponent<Grabbing> ();
 	}
 
 	void Update () {
@@ -23,5 +27,7 @@ public class ResetPosition : MonoBehaviour {
 			mop.SetObjectPosition(ren,firstposition.Value);
 			kin.makeStationary ();
 		}
+		if (grabbing.grabbed == true)
+			kin.makeStationary ();
 	}
 }

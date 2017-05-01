@@ -37,6 +37,6 @@ public class MiscInput : MonoBehaviour {
 				htRacket.controller = gloveController;
 			}
 		}
-		Ydown = OVRInput.GetDown (OVRInput.RawButton.Y);
+		Ydown = OVRInput.GetDown (OVRInput.RawButton.Y);	
 	}
 }
