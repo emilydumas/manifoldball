@@ -2,57 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Grab and move script for a single target object.
+// Must be attached to an object with a HandTracking component.
 public class Grabbing : MonoBehaviour {
 
-	public float grabDistance;
+	public float grabDistance = 0.1f;
 	public static bool grabbed=false;
-	public GameObject paddle;
+	public GameObject ball;
+	private OVRInput.Controller controller;
 
-	private Renderer paddleRenderer, ballRenderer;
-	private Vector4 paddleLastPosition,paddleCurrentPosition,paddleVelocity;
-	private bool left;
-	private bool right;
-	private Matrix4x4 varBall,varHand;
-	private Vector4 ballPose, handPose;
-	private Material ball;
-	private Material hand;
-	private float Lgrab;
-	private float Rgrab;
+	private HandTracking ht;
+	private Vector3 gloveLastPosition,gloveCurrentPosition,gloveVelocity;
+	private Renderer rball;
+	private Renderer rglove;
+
 	// Use this for initialization
 	void Start () 
 	{
-		ballRenderer = GameObject.Find ("Ball").GetComponent<Renderer> ();
-		ball = GameObject.Find ("Ball").GetComponent<Renderer> ().sharedMaterial;
-		hand = GameObject.Find ("LHand").GetComponent<Renderer> ().sharedMaterial;
-		paddleRenderer = paddle.gameObject.GetComponent<Renderer> ();
-		paddleLastPosition = mop.GetObjectPosition (paddleRenderer);
+		// We query the handcontroller script to determine which touch controller we should use
+		ht = gameObject.GetComponent<HandTracking> ();
+		if (ht == null) {
+			Debug.LogError("No HandTracking component found");
+		}
+
+		rball = ball.GetComponent<Renderer> ();
+		rglove = gameObject.GetComponent<Renderer> ();
+		gloveLastPosition = mop.GetObjectPosition (rglove);
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		paddleCurrentPosition = mop.GetObjectPosition(paddleRenderer);
-		right = GameObject.Find ("LHand").GetComponent<HandTracking> ().right;
-		left = GameObject.Find ("RHand").GetComponent<LHandTracking> ().left;
-		Rgrab = OVRInput.Get (OVRInput.RawAxis1D.RHandTrigger);
-		Lgrab = OVRInput.Get (OVRInput.RawAxis1D.LHandTrigger);
-		varBall = ball.GetMatrix("_objectpose");
-		varHand = hand.GetMatrix("_objectpose");
-		ballPose = varBall.GetColumn (3);
-		handPose = varHand.GetColumn (3);
-		float distance = Vector4.Distance (ballPose, handPose);
-		if ((distance < grabDistance && Lgrab > 0 && right) ||(distance < grabDistance && Rgrab>0 && left)) {
-			grabbed = true;
-			varBall.SetColumn (3, handPose);
-			ball.SetMatrix ("_objectpose", varBall);
-			paddleVelocity = paddleCurrentPosition - paddleLastPosition;
+		gloveCurrentPosition = mop.GetObjectPosition(rglove);
+			
+		float trigger;
+		if (ht.controller == OVRInput.Controller.LTouch) {
+			trigger = OVRInput.Get (OVRInput.RawAxis1D.LHandTrigger) + OVRInput.Get (OVRInput.RawAxis1D.LIndexTrigger);
 		} else {
-			grabbed = false;
-			varBall.SetColumn (3, ballPose);
-			ball.SetMatrix ("_objectpose", varBall);
-
+			trigger = OVRInput.Get (OVRInput.RawAxis1D.RHandTrigger) + OVRInput.Get (OVRInput.RawAxis1D.RIndexTrigger);
 		}
-		/*if(!grabbed)
-		mop.TranslateObjectPosition (ballRenderer, paddleVelocity * Time.deltaTime);*/	
+			
+		if (!grabbed && (trigger > 0)) {
+			float distance = Vector3.Distance (mop.GetObjectPosition (rball), gloveCurrentPosition);
+			if (distance < grabDistance) {
+				grabbed = true;
+			}
+		}
+
+		if (grabbed && (trigger == 0)) {
+			grabbed = false;
+		}
+
+		if (grabbed) {
+			mop.SetObjectPosition (rball, gloveCurrentPosition);
+			gloveVelocity = gloveCurrentPosition - gloveLastPosition;
+		}
 	}
 }
