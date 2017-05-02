@@ -50,5 +50,5 @@ Minor:
 
 * Horalia Armas
 * David Dumas (<david@dumas.io>)
-* Brandon Reichman
+* Brandon Reichman (<breich5@uic.edu>)
 * Hai Tran (<htran41@uic.edu>)
