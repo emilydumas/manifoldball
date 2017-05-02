@@ -18,6 +18,10 @@ The game can be played in three orbifolds:
 * The two-fold cover of S^3 branched over the Borromean rings
 * The mirrored cube orbifold
 
+## Documentation
+
+Game play documentation and control bindings are described in [docs/INSTRUCTIONS.md](docs/INSTRUCTIONS.md).
+
 ## Known issues
 
 Major:
