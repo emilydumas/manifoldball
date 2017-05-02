@@ -46,6 +46,7 @@ public class Grabbing : MonoBehaviour {
 			float distance = Vector3.Distance (mop.GetObjectPosition (rball), gloveCurrentPosition);
 			if (distance < grabDistance) {
 				grabbed = true;
+				kball.makeStationary ();
 				kball.kineticsActive = false;
 			}
 		}
