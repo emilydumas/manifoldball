@@ -100,7 +100,7 @@ In the GAME:
 
 ## Development Team
 
-Horalia Armas
-David Dumas <david@dumas.io>  (current maintainer)
-Brandon Reichman <breich5@uic.edu>
-Hai Tran <htran41@uic.edu>
+* Horalia Armas
+* David Dumas <david@dumas.io>  (current maintainer)
+* Brandon Reichman <breich5@uic.edu>
+* Hai Tran <htran41@uic.edu>
