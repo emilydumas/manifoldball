@@ -24,10 +24,10 @@ If starting from a binary distribution, download the ZIP archive,
 extract the ZIP file, and then run the EXE file.
 
 For 32-bit windows users, the executable will have a name like:
-  manifoldball-VERSION-32bit.exe
+```manifoldball-VERSION-32bit.exe```
 
 For 64-bit windows users, the executable will have a name like:
-  manifoldball-VERSION-64bit.exe
+```manifoldball-VERSION-64bit.exe```
 
 In both cases VERSION will be replaced by a version number (like
 "v0.2").
