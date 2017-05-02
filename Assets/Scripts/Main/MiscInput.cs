@@ -17,12 +17,6 @@ public class MiscInput : MonoBehaviour {
 	}
 
 	void Update () {
-		// Quit on both thumbstick press
-		if (OVRInput.Get (OVRInput.RawButton.LThumbstick) && OVRInput.Get (OVRInput.RawButton.RThumbstick)) {
-			UnityEngine.Application.Quit ();
-			Debug.LogError ("Quit selected.");
-		}
-
 		// Return to main menu on start button press or escape key
 		if (OVRInput.GetDown (OVRInput.RawButton.Start) || Input.GetKey(KeyCode.Escape))
 			SceneManager.LoadScene ("MenuScene");
