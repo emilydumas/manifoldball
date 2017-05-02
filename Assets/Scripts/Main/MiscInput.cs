@@ -23,8 +23,8 @@ public class MiscInput : MonoBehaviour {
 			Debug.LogError ("Quit selected.");
 		}
 
-		// Return to main menu on start button press
-		if (OVRInput.GetDown (OVRInput.RawButton.Start))
+		// Return to main menu on start button press or escape key
+		if (OVRInput.GetDown (OVRInput.RawButton.Start) || Input.GetKey(KeyCode.Escape))
 			SceneManager.LoadScene ("MenuScene");
 
 		// Switch hand roles on Y button press

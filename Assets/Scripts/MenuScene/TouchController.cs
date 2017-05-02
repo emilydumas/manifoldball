@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TouchController : MonoBehaviour {
+	private bool seenEscapeReleased = false;
+
     public OVRInput.Controller controller;
 
 	// Update is called once per frame
@@ -15,6 +17,14 @@ public class TouchController : MonoBehaviour {
 			UnityEngine.Application.Quit ();
 			Debug.LogError ("Quit selected.");
 		}
+			
+		if (!Input.GetKey (KeyCode.Escape))
+			seenEscapeReleased = true;
 
+		// Quit if escape is pressed (unless it has been pressed since scene start)
+		if (Input.GetKey (KeyCode.Escape) && seenEscapeReleased) {
+			UnityEngine.Application.Quit ();
+			Debug.LogError ("Quit selected.");
+		}
     }
 }
