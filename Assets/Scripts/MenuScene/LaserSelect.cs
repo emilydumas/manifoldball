@@ -4,10 +4,15 @@ using UnityEngine.UI;
 
 public class LaserSelect : MonoBehaviour
 {
-    public OVRInput.Controller controller;
     public LayerMask selectableLayers;
     private GameObject pointerDest;
     private bool clicked = false;
+	private bool haveSeenTriggerRelease = false;
+
+	void Start()
+	{
+		haveSeenTriggerRelease = false;
+	}
 
     private void activateObject(GameObject ob)
     {
@@ -27,34 +32,42 @@ public class LaserSelect : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position, transform.forward, 100.0f, selectableLayers);
-        if (hits.Length > 0)
-        {
-            int closestHit = 0;
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i].distance < hits[closestHit].distance) closestHit = i;
-            }
-    
-            if (hits[closestHit].transform.gameObject != pointerDest)
-            {
-                // Inform objects that a new one is active
-                if (pointerDest != null) deactivateObject(pointerDest);
-                pointerDest = hits[closestHit].transform.gameObject;
-                activateObject(pointerDest);
-            }
+		bool trigger = OVRInput.Get (OVRInput.RawButton.RIndexTrigger);
 
-            if (!clicked && OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller))
-            {
-                clicked = true;
-                clickObject(pointerDest);
-            }
-        } else {
-            deactivateObject(pointerDest);
-            pointerDest = null;
-            clicked = false;
-        }
-        clicked = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller);
+		if (!trigger) {
+			haveSeenTriggerRelease = true;
+		}
+			
+		if (haveSeenTriggerRelease) {
+			RaycastHit[] hits;
+			hits = Physics.RaycastAll (transform.position, transform.forward, 100.0f, selectableLayers);
+			if (hits.Length > 0) {
+				int closestHit = 0;
+				for (int i = 0; i < hits.Length; i++) {
+					if (hits [i].distance < hits [closestHit].distance)
+						closestHit = i;
+				}
+	    
+				if (hits [closestHit].transform.gameObject != pointerDest) {
+					// Inform objects that a new one is active
+					if (pointerDest != null)
+						deactivateObject (pointerDest);
+					pointerDest = hits [closestHit].transform.gameObject;
+					activateObject (pointerDest);
+				}
+
+				if (!clicked && trigger) {
+					clicked = true;
+					clickObject (pointerDest);
+				}
+			} else {
+				deactivateObject (pointerDest);
+				pointerDest = null;
+				clicked = false;
+			}
+			clicked = trigger;
+		} else {
+			Debug.Log ("Ignoring action because no trigger release yet.");
+		}
     }
 }

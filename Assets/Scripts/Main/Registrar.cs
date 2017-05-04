@@ -7,20 +7,29 @@ using UnityEngine;
 using System;
 
 public class Registrar : MonoBehaviour {
+	public enum CameraMode { Unity, MOP };
+
 	public string targetTag = "Geometric";
 	public float IPD = 0.06f;
 	public CameraController cameraController;
+	public CameraMode cameraMode;
 
-	// TODO: Separate clone logic and variables into another script/class
 	public int N = 2;
-	private float cubesize; // Fetched from wrapper
+	public float cubesize = 3.0f;
+
+	[Header("Debugging: Ignore menu, set tiling")]
+	public bool ForceTilingType = false;
+	[Tooltip("Typically null, use only to override menu selection.")] public TilingType ForcedTilingValue;
+
+	public Tiling tiling;  // Not shown in inspector!
+
 	private int clonecount = 0;
 
 	void Awake()
 	{
 		// STEP 1: SHADER INITIALIZATION
 		// Every instance of VRMOP needs projection and eye shift matrices.
-
+	
 		// Retrieve the current projection
 		Matrix4x4 currentP = GL.GetGPUProjectionMatrix(Camera.main.projectionMatrix, true);
 		// Create a standard view matrix
@@ -38,12 +47,15 @@ public class Registrar : MonoBehaviour {
 			// First we duplicate so changed properties will not be saved.
 			rend.sharedMaterial = new Material (rend.sharedMaterial);
 
-			// Now we initialize their locks and PV matrices
-			rend.sharedMaterial.SetMatrix("_VP0", VP0);
-			rend.sharedMaterial.SetInt ("_locked", 1);
+			if (cameraMode == CameraMode.MOP) {
+				// TODO: Move these into MOPUtil?
+				// Now we initialize their locks and PV matrices
+				rend.sharedMaterial.SetMatrix("_VP0", VP0);
+				rend.sharedMaterial.SetInt ("_locked", 1);
 
-			rend.sharedMaterial.SetMatrix ("_eye0shift", eye0shift);
-			rend.sharedMaterial.SetMatrix ("_eye1shift", eye1shift);
+				rend.sharedMaterial.SetMatrix ("_eye0shift", eye0shift);
+				rend.sharedMaterial.SetMatrix ("_eye1shift", eye1shift);
+			}
 
 			// Disable culling
 			Mesh mesh = target.GetComponent<MeshFilter>().mesh;
@@ -52,6 +64,27 @@ public class Registrar : MonoBehaviour {
 			} else {
 				Debug.Log ("Failed to update bounds on \"" + target.name + "\", no MeshFilter component found.");
 			}
+		}
+
+		Matrix4x4 origin = Matrix4x4.identity;
+		InitialPoses IP = this.GetComponent<InitialPoses> ();
+		if (IP != null) {
+			Vector3 ibp = IP.globalRelativeShift + IP.ballInitialPosition;
+			origin.SetColumn (3, new Vector4(ibp.x, ibp.y, ibp.z, 1.0f));
+		}
+
+		if (ForceTilingType) {
+			GlobalPreferences.tilingType = ForcedTilingValue;
+		}
+
+		// Create the tiling (so it can be accessed in other classes Start())
+		var tt = GlobalPreferences.tilingType;
+		if (tt == TilingType.Torus) {
+			tiling = new TorusTiling (origin, N, cubesize);
+		} else if (tt == TilingType.Boro) {
+			tiling = new BoroTiling (origin, N, cubesize);
+		} else if (tt == TilingType.MirrorCube) {
+			tiling = new MirrorCubeTiling (origin, N, cubesize);
 		}
 	}
 
@@ -66,7 +99,7 @@ public class Registrar : MonoBehaviour {
 		// Note that this is done before duplication, so a single queue entry updates the camera
 		// pose for all of the linked clones.
 
-		if (cameraController != null) {
+		if (cameraController != null && cameraMode == CameraMode.MOP) {
 			foreach (GameObject target in GameObject.FindGameObjectsWithTag(targetTag)) {
 				Renderer rend = target.GetComponent<Renderer> ();
 
@@ -85,35 +118,25 @@ public class Registrar : MonoBehaviour {
 		}
 
 		// STEP 3: CREATE CLONES
-		cubesize = this.GetComponent<Wrapper> ().cubesize;
-
-		//physicsUtil = this.GetComponent<PhysicsUtil> ();
-
 		foreach (GameObject target in GameObject.FindGameObjectsWithTag(targetTag))
 		{
 			ResetCloneCount ();
 			GameObject clonegroup = new GameObject(target.name + "-clones");
 	
-			for (int i = -N; i <= N; i++)
-				for (int j = -N; j <= N; j++)
-					for (int k = -N; k <= N; k++) {
-						if (i == 0 && j == 0 && k == 0)
-							continue;
-						GameObject clone = TransformedClone (
-							                   target,
-							                   new Vector3 (cubesize * i, cubesize * j, cubesize * k)
-						                   );
-						clone.transform.parent = clonegroup.transform;
-					}
+			foreach (Matrix4x4 T in tiling) {
+				if (T.Equals (Matrix4x4.identity))
+					continue;
+				GameObject clone = TransformedClone (target, T);
+				clone.transform.parent = clonegroup.transform;
+			}
 		}
 	}
 		
 	private void ResetCloneCount() {
 		clonecount = 0;
 	}
-
-	// TODO: Matrix4x4 transform parameter instead of translation vector
-	private GameObject TransformedClone(GameObject target, Vector3 translation)
+		
+	private GameObject TransformedClone(GameObject target, Matrix4x4 FP)
 	{
 		// Make a full hierarchical clone of the input object...
 		GameObject clone = Instantiate(target);
@@ -123,15 +146,7 @@ public class Registrar : MonoBehaviour {
 		RemoveComponents(clone);
 
 		// Set FollowerPose of the clone as a per-rendered property
-		MaterialPropertyBlock propblock = new MaterialPropertyBlock();
-		Renderer ren = clone.GetComponent<Renderer>();
-
-		ren.GetPropertyBlock(propblock);
-		propblock.SetVector("_followerpose1", new Vector4(1, 0, 0, translation.x));
-		propblock.SetVector("_followerpose2", new Vector4(0, 1, 0, translation.y));
-		propblock.SetVector("_followerpose3", new Vector4(0, 0, 1, translation.z));
-		propblock.SetVector("_followerpose4", new Vector4(0,0,0, 1)); 
-		ren.SetPropertyBlock (propblock);
+		mop.SetFollowerPose(clone, FP);
 
 		// Disable culling
 		Mesh mesh = clone.GetComponent<MeshFilter>().mesh;
